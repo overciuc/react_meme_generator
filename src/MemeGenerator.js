@@ -1,18 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import { useEffect, useState } from 'react';
-import {
-  Button,
-  ButtonDiv,
-  Div,
-  Form,
-  H1,
-  Input,
-  Label,
-  MemeImage,
-  Section,
-  Select,
-  Span,
-} from './elements';
 
 export default function CustomMemeGenerator() {
   const [topText, setTopText] = useState('');
@@ -80,53 +67,53 @@ export default function CustomMemeGenerator() {
   }
 
   return (
-    <Section>
-      <H1>Custom Meme Generator</H1>
-      <Form>
-        <Div>
-          <Span>
+    <section>
+      <h1>Custom Meme Generator</h1>
+      <form>
+        <div>
+          <span>
             {/* Input field for the top text */}
-            <Label htmlFor="topLine">Enter top line text</Label>
-            <Input
+            <label htmlFor="topLine">Enter top line text</label>
+            <input
               type="text"
               id="topLine"
               placeholder="eg: to infinity"
               onChange={handleTopTextChange}
               value={topText}
             />
-          </Span>
-          <Span>
+          </span>
+          <span>
             {/* Input field for the bottom text */}
-            <Label htmlFor="bottomLine">Enter bottom line text</Label>
-            <Input
+            <label htmlFor="bottomLine">Enter bottom line text</label>
+            <input
               type="text"
               id="bottomLine"
               placeholder="eg: and beyond"
               onChange={handleBottomTextChange}
               value={bottomText}
             />
-          </Span>
-        </Div>
+          </span>
+        </div>
 
         {/* Going through an array of images and generating the dropdown menu for user to choose a meme template */}
-        <Label htmlFor="meme">Choose your meme</Label>
-        <Select value={select} id="meme" onChange={handleSelectMenuOnChange}>
+        <label htmlFor="meme">Choose your meme</label>
+        <select value={select} id="meme" onChange={handleSelectMenuOnChange}>
           <option>Please select</option>
           {data.map((objects) => (
             <option value={objects.id} key={objects.id}>
               {objects.name}
             </option>
           ))}
-        </Select>
+        </select>
 
-        <ButtonDiv>
+        <div>
           {/* Generate meme button */}
-          <Button type="button" onClick={handleMemeSleectionOnClick}>
+          <button type="button" onClick={handleMemeSleectionOnClick}>
             Show Meme
-          </Button>
+          </button>
 
           {/* Download custom meme button*/}
-          <Button
+          <button
             type="button"
             onClick={() => {
               downloadImage(
@@ -135,10 +122,10 @@ export default function CustomMemeGenerator() {
             }}
           >
             Download Meme
-          </Button>
-        </ButtonDiv>
-        <MemeImage alt="Generated Meme" src={url} />
-      </Form>
-    </Section>
+          </button>
+        </div>
+        <img alt="Generated Meme" src={url} />
+      </form>
+    </section>
   );
 }

@@ -1,3 +1,4 @@
+/*
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
@@ -29,7 +30,7 @@ export const Form = styled.form`
   align-items: center;
 `;
 
-export const Input = styled.input`
+input {
   margin: 10px;
   border-radius: 10px;
   border: 2px solid #000080;
@@ -40,7 +41,7 @@ export const Input = styled.input`
   &::placeholder {
     color: rgba(160, 160, 160);
   }
-`;
+};
 
 export const H1 = styled.h1`
   font-size: 50px;
@@ -96,3 +97,4 @@ export const Span = styled.span`
 export const Div = styled.div`
   display: flex;
 `;
+*/
