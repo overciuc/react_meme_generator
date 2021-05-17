@@ -1,5 +1,4 @@
-import React from 'react';
-import MemeGenerator from './MemeGenerator';
+import CustomMemeGenerator from './MemeGenerator';
 
 // import Meme from './Meme.js';
 
@@ -7,7 +6,7 @@ function App() {
   return (
     <div>
       {' '}
-      <MemeGenerator />
+      <CustomMemeGenerator />
     </div>
   );
 }

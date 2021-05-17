@@ -1,93 +1,144 @@
-import './styles.css';
-// import handleDownload from 'MemeDownload.js';
-import React from 'react';
+/** @jsxImportSource @emotion/react */
+import { useEffect, useState } from 'react';
+import {
+  Button,
+  ButtonDiv,
+  Div,
+  Form,
+  H1,
+  Input,
+  Label,
+  MemeImage,
+  Section,
+  Select,
+  Span,
+} from './elements';
 
-class MemeGenerator extends React.Component {
-  state = {
-    loading: false,
-    topText: '',
-    bottomText: '',
-    allMemeImgs: [],
-    randomImg: 'https://api.memegen.link/images/buzz.png',
-  };
+export default function CustomMemeGenerator() {
+  const [topText, setTopText] = useState('');
+  const [bottomText, setBottomText] = useState('');
+  const [select, setSelect] = useState('');
+  const [data, setData] = useState([]);
+  const [url, setUrl] = useState('https://api.memegen.link/images/buzz.png');
 
-  imageSelector(props) {}
+  // Fetching array of images from URL to display in the select menu
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://api.memegen.link/templates/');
+        const json = await response.json();
+        setData(json);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchData();
+  }, []);
 
-  componentDidMount(props) {
-    this.setState({
-      loading: true,
-    });
+  // Event handlers to get the values from the input fields
+  const handleTopTextChange = (event) => setTopText(event.currentTarget.value);
+  const handleBottomTextChange = (event) =>
+    setBottomText(event.currentTarget.value);
+  const handleSelectMenuOnChange = (event) =>
+    setSelect(event.currentTarget.value);
 
-    fetch('https://api.memegen.link/templates/')
-      .then((response) => response.json())
-      .then((content) =>
-        this.setState({
-          allMemeImgs: content,
-          loading: false,
-        }),
-      );
-  }
-
-  handleChange = (event) => {
-    const { name, value } = event.target;
-
-    this.setState({
-      [name]: value,
-    });
-  };
-  handleSubmit = (event) => {
-    event.preventDefault();
-    const { allMemeImgs } = this.state;
-    const rand =
-      allMemeImgs[Math.floor(Math.random() * allMemeImgs.length)].blank;
-    this.setState({
-      randomImg: rand,
-    });
-  };
-
-  render() {
-    return (
-      <section className="box">
-        <h1 className="boxTitle">Meme Generator</h1>
-        <form className="meme-form">
-          <div>
-            <label>Top Text</label>
-            <input
-              placeholder="Enter Text"
-              type="text"
-              value={this.state.topText}
-              name="topText"
-              onChange={this.handleChange}
-            />
-          </div>
-          <div>
-            <label>Bottom Text</label>
-            <input
-              placeholder="Enter Text"
-              type="text"
-              value={this.state.bottomText}
-              name="bottomText"
-              onChange={this.handleChange}
-            />
-          </div>
-        </form>
-
-        <div className="div_button">
-          <button onClick={this.handleSubmit} className="margin-right">
-            Random Image
-          </button>
-          <button>Download the file</button>
-        </div>
-
-        <br />
-        <div className="meme">
-          <img className="imageDisplay" src={this.state.randomImg} alt="meme" />
-          <h2 className="top">{this.state.topText}</h2>
-          <h2 className="bottom">{this.state.bottomText}</h2>
-        </div>
-      </section>
+  // Event handler to display the selected meme
+  const handleMemeSleectionOnClick = () => {
+    setUrl(
+      `https://api.memegen.link/images/${select}/${topText}/${bottomText}.png`,
     );
-  }
-}
+  };
 
-export default MemeGenerator;
+  // Function that handles download of the custom meme
+  function downloadFunction(blob, filename) {
+    const anchor = document.createElement('a');
+    anchor.style.display = 'none';
+    anchor.href = window.URL.createObjectURL(blob);
+    anchor.setAttribute('download', filename);
+    document.body.appendChild(anchor);
+
+    // Trigger the custom meme download on click
+    anchor.click();
+
+    // Clean
+    window.URL.revokeObjectURL(anchor.href);
+    document.body.removeChild(anchor);
+  }
+
+  // Download the custom meme using Blob and use a filename form the URL if no other is provided
+  function downloadImage(URL, filename) {
+    if (!filename) filename = URL.match(/\/([^/#?]+)[^/]*$/)[1];
+    fetch(URL, {
+      headers: new Headers({
+        Origin: window.location.origin,
+      }),
+      mode: 'cors',
+    })
+      .then((response) => response.blob())
+      .then((blob) => downloadFunction(blob, filename))
+      .catch((e) => console.error(e));
+  }
+
+  return (
+    <Section>
+      <H1>Custom Meme Generator</H1>
+      <Form>
+        <Div>
+          <Span>
+            {/* Input field for the top text */}
+            <Label htmlFor="topLine">Enter top line text</Label>
+            <Input
+              type="text"
+              id="topLine"
+              placeholder="eg: to infinity"
+              onChange={handleTopTextChange}
+              value={topText}
+            />
+          </Span>
+          <Span>
+            {/* Input field for the bottom text */}
+            <Label htmlFor="bottomLine">Enter bottom line text</Label>
+            <Input
+              type="text"
+              id="bottomLine"
+              placeholder="eg: and beyond"
+              onChange={handleBottomTextChange}
+              value={bottomText}
+            />
+          </Span>
+        </Div>
+
+        {/* Going through an array of images and generating the dropdown menu for user to choose a meme template */}
+        <Label htmlFor="meme">Choose your meme</Label>
+        <Select value={select} id="meme" onChange={handleSelectMenuOnChange}>
+          <option>Please select</option>
+          {data.map((objects) => (
+            <option value={objects.id} key={objects.id}>
+              {objects.name}
+            </option>
+          ))}
+        </Select>
+
+        <ButtonDiv>
+          {/* Generate meme button */}
+          <Button type="button" onClick={handleMemeSleectionOnClick}>
+            Show Meme
+          </Button>
+
+          {/* Download custom meme button*/}
+          <Button
+            type="button"
+            onClick={() => {
+              downloadImage(
+                `https://api.memegen.link/images/${select}/${topText}/${bottomText}.png`,
+              );
+            }}
+          >
+            Download Meme
+          </Button>
+        </ButtonDiv>
+        <MemeImage alt="Generated Meme" src={url} />
+      </Form>
+    </Section>
+  );
+}
