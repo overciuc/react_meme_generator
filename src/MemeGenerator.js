@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { useEffect, useState } from 'react';
 
 export default function CustomMemeGenerator() {
