@@ -7,6 +7,8 @@ export default function CustomMemeGenerator() {
   const [data, setData] = useState([]);
   const [url, setUrl] = useState('https://api.memegen.link/images/buzz.png');
 
+  const [disabled, setDisabled] = useState(true);
+
   // Fetching array of images from URL to display in the select menu
   useEffect(() => {
     const fetchData = async () => {
@@ -17,6 +19,7 @@ export default function CustomMemeGenerator() {
       } catch (e) {
         console.error(e);
       }
+      setDisabled(false);
     };
     fetchData();
   }, []);
@@ -119,6 +122,7 @@ export default function CustomMemeGenerator() {
                 `https://api.memegen.link/images/${select}/${topText}/${bottomText}.png`,
               );
             }}
+            disabled={topText ? false : true}
           >
             Download Meme
           </button>

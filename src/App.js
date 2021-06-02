@@ -1,4 +1,4 @@
-import CustomMemeGenerator from './MemeGenerator';
+import CustomMemeGenerator from './CustomMemeGenerator';
 
 function App() {
   return (
